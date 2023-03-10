@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <style type="text/css" media="screen">
+      :root {
+        --titleHeight:50px;
+      }
+
+      body {
+        display:flex;
+        flex-direction:column;
+        width:100%;
+        height:100%;
+        padding:10px;
+        margin:0px;
+        box-sizing:border-box;
+        background-color: #727272;
+      }
+    
+      .header {
+        display:flex; 
+        flex-direction:row;
+        width:100%;
+        height:var(--titleHeight);
+        padding:10px;
+        border-radius:5px;
+        background-color:#D9D9D9;
+      }
+      
+      .name {
+        height:30px;
+        font-family: Arial, sans-serif;
+        font-size:30px;
+        flex-grow:1;
+        color:#444444;
+        outline:0px solid transparent;
+      }
+      
+      .menus {
+        display:flex; 
+        flex-grow:0;
+        flex-direction:row;
+      }
+    
+      .editorContainer { 
+        width:100%;
+        height:calc(100% - var(--titleHeight));
+      }
+      
+      .editor {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius:5px;
+      }
+      
+      .paddingInward {box-sizing:border-box;}
+      .hiddenScrollBar::-webkit-scrollbar {display: none;}
+      .hiddenScrollBar {-ms-overflow-style: none; scrollbar-width: none;}
+    </style>
+  </head>
+  
+  <body>
+    <div class="header paddingInward">
+      <div id="filename" contenteditable="true" class="name">untitled.txt</div>
+      <div style="width:10px;"></div>
+      <div class="menus">
+        <div id="editorMode" style="width:75px; height:30px; border-radius:5px; background-color:#727272; font-family: Arial, sans-serif; font-size:25px; text-align:center; color:white;">mode</div>
+        <div style="width:10px"></div>
+        <div id="openFile" style="width:30px; height:30px; border-radius:5px; background-color:#727272;">
+          <img src="assets/upload.svg" style="width:100%; height:100%;">
+        </div>
+        <div style="width:10px"></div>
+        <div id="saveFile" style="width:30px; height:30px; border-radius:5px; background-color:#727272;">
+          <img src="assets/download.svg" style="width:99%; height:99%; margin:auto;">
+        </div>
+      </div>
+    </div>
+    
+    <div style="height:10px;"></div>
+    
+    <div class="editorContainer paddingInward">
+      <div id="aceEditorTarget" class="editor"></div>
+    </div>
+    
+      <!-- Required Ace Libraries -->
+    <script src="ace/ace.js"></script>
+    <script src="ace/mode-javascript.js"></script>
+    
+    <script>
+      const filename   = document.getElementById("filename");
+      const editorMode = document.getElementById("editorMode");
+      const openFile   = document.getElementById("openFile");
+      const saveFile   = document.getElementById("saveFile");
+      
+      const editor = ace.edit("aceEditorTarget");
+      
+      const validExtensions = [".txt", ".js", ".html"];
+      
+      const download = (filename, text) => {
+        const downloader = document.createElement('a');
+        downloader.href = "data:text/plain;charset=utf-8," + encodeURIComponent(text); downloader.download = filename; downloader.style.display = 'none';
+        document.body.appendChild(downloader); downloader.click(); document.body.removeChild(downloader);
+      }
+      
+      const inputFiles = async (receiver) => {
+        const getter = document.createElement("input");
+        getter.type = "file";
+        getter.accept = validExtensions.join(",");
+        getter.onchange= () => {receiver(getter.files)};
+        document.body.appendChild(getter); getter.click();  document.body.removeChild(getter);
+      }
+      
+    </script>
+      
+    <script>
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/javascript");
+      
+      saveFile.addEventListener("click", () => {
+        if (!filename.innerText.includes(".")) {console.log("invalid filename"); return;}
+        const filenameSplit = filename.innerText.split(".");
+        if (!validExtensions.includes("."+filenameSplit[filenameSplit.length-1])) {console.log("invalid filetype"); return;}
+        download(filenameSplit.join("."), editor.getValue());
+      }); 
+      
+      openFile.addEventListener("click", () => {
+        inputFiles(async files => {
+          const fileTypeSplit = files[0].type.split("/");
+          const type = fileTypeSplit[fileTypeSplit.length-1];
+          filename.innerText = files[0].name;
+          editor.session.setMode("ace/mode/"+type);
+          editor.setValue(await files[0].text());
+          editor.gotoLine(1);
+        });
+      });
+    </script>
+  </body>
+</html>  
