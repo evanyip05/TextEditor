@@ -1,8 +1,11 @@
 <html>
   <head>
+    <link rel="icon" type="image/x-icon" href="assets/pencil.svg">
+  
     <style type="text/css" media="screen">
       :root {
         --titleHeight:50px;
+        --contentHeight:calc(100vh - 70px);
       }
 
       body {
@@ -28,7 +31,6 @@
       
       .name {
         height:30px;
-        font-family: Arial, sans-serif;
         font-size:30px;
         flex-grow:1;
         color:#444444;
@@ -40,10 +42,17 @@
         flex-grow:0;
         flex-direction:row;
       }
+      
+      .content {
+        display:flex;
+        flex-direction:row;
+        width:100%;
+        height:var(--contentHeight);
+      }
     
       .editorContainer { 
-        width:100%;
-        height:calc(100% - var(--titleHeight));
+        width:auto;
+        flex-grow:1;
       }
       
       .editor {
@@ -57,6 +66,25 @@
         border-radius:5px;
       }
       
+      .settings {
+        display:none;
+        height:100%;
+        border-radius:5px;
+        padding:5px;
+        background-color:#444444;
+      }
+      
+      .settingLabel {
+        padding-right:5px;
+        text-align:right;
+        color:white;
+      }
+      
+      .settingDropdown {
+        outline:0px solid transparent;
+      }
+      
+      .sansSerif {font-family: Arial, sans-serif;}
       .paddingInward {box-sizing:border-box;}
       .hiddenScrollBar::-webkit-scrollbar {display: none;}
       .hiddenScrollBar {-ms-overflow-style: none; scrollbar-width: none;}
@@ -64,11 +92,14 @@
   </head>
   
   <body>
+
     <div class="header paddingInward">
-      <div id="filename" contenteditable="true" class="name">untitled.txt</div>
+      <div id="filename" contenteditable="true" class="name sansSerif">untitled.txt</div>
       <div style="width:10px;"></div>
       <div class="menus">
-        <div id="editorMode" style="width:75px; height:30px; border-radius:5px; background-color:#727272; font-family: Arial, sans-serif; font-size:25px; text-align:center; color:white;">mode</div>
+        <div id="settingsButton" style="width:30px; height:30px; border-radius:5px; background-color:#727272;">
+          <img src="assets/settings.svg" style="width:100%; height:100%;">
+        </div>
         <div style="width:10px"></div>
         <div id="openFile" style="width:30px; height:30px; border-radius:5px; background-color:#727272;">
           <img src="assets/upload.svg" style="width:100%; height:100%;">
@@ -82,23 +113,311 @@
     
     <div style="height:10px;"></div>
     
-    <div class="editorContainer paddingInward">
-      <div id="aceEditorTarget" class="editor"></div>
+    <div class="content">
+      <div class="fileSystem">
+      </div>
+    
+      <div class="editorContainer paddingInward"> 
+        <div id="aceEditorTarget" class="editor"></div>
+      </div>
+      
+      <div id="settingsSpacer" style="display:none; width:10px; height:100%"></div>
+      
+      <div id="settingsMenu" class="settings paddingInward">
+        <table>
+          <tr>
+            <td><div class="sansSerif settingLabel">Keybinding</div></td>
+            <td>
+              <select id="keybindSelector" class="settingDropdown">
+                <optgroup class="sansSerif" label="Keybinding">
+                  <option class="sansSerif" value="ace/keyboard/ace">Ace</button>
+                  <option class="sansSerif" value="ace/keyboard/vim">Vim</button>
+                  <option class="sansSerif" value="ace/keyboard/emacs">Emacs</button>
+                  <option class="sansSerif" value="ace/keyboard/sublime">Sublime</button>
+                  <option class="sansSerif" value="ace/keyboard/vscode">VSCode</button>
+                </optgroup>
+              </select>
+            </td>
+          </tr>
+          
+          <tr>
+            <td><div class="sansSerif settingLabel">Language</div></td>
+            <td>
+              <select id="langSelector" class="settingDropdown">
+                <optgroup class="sansSerif" label="Quick Access">
+                  <option class="sansSerif" value="ace/mode/text">Text</option>
+                  <option class="sansSerif" value="ace/mode/html">HTML</option>
+                  <option class="sansSerif" value="ace/mode/html_elixir">HTML (Elixir)</option>
+                  <option class="sansSerif" value="ace/mode/html_ruby">HTML (Ruby)</option>
+                  <option class="sansSerif" value="ace/mode/javascript">JavaScript</option>
+                  <option class="sansSerif" value="ace/mode/css">CSS</option>
+                  <option class="sansSerif" value="ace/mode/svg">SVG</option>
+                  <option class="sansSerif" value="ace/mode/markdown">Markdown</option>
+                </optgroup>
+                <optgroup class="sansSerif" label="Language">
+                  <option class="sansSerif" value="ace/mode/abap">ABAP</option>
+                  <option class="sansSerif" value="ace/mode/abc">ABC</option>
+                  <option class="sansSerif" value="ace/mode/actionscript">ActionScript</option>
+                  <option class="sansSerif" value="ace/mode/ada">ADA</option>
+                  <option class="sansSerif" value="ace/mode/alda">Alda</option>
+                  <option class="sansSerif" value="ace/mode/apache_conf">Apache Conf</option>
+                  <option class="sansSerif" value="ace/mode/apex">Apex</option>
+                  <option class="sansSerif" value="ace/mode/aql">AQL</option>
+                  <option class="sansSerif" value="ace/mode/asciidoc">AsciiDoc</option>
+                  <option class="sansSerif" value="ace/mode/asl">ASL</option>
+                  <option class="sansSerif" value="ace/mode/assembly_x86">Assembly x86</option>
+                  <option class="sansSerif" value="ace/mode/autohotkey">AutoHotkey / AutoIt</option>
+                  <option class="sansSerif" value="ace/mode/batchfile">BatchFile</option>
+                  <option class="sansSerif" value="ace/mode/c_cpp">C and C++</option>
+                  <option class="sansSerif" value="ace/mode/c9search">C9Search</option>
+                  <option class="sansSerif" value="ace/mode/cirru">Cirru</option>
+                  <option class="sansSerif" value="ace/mode/clojure">Clojure</option>
+                  <option class="sansSerif" value="ace/mode/cobol">Cobol</option>
+                  <option class="sansSerif" value="ace/mode/coffee">CoffeeScript</option>
+                  <option class="sansSerif" value="ace/mode/coldfusion">ColdFusion</option>
+                  <option class="sansSerif" value="ace/mode/crystal">Crystal</option>
+                  <option class="sansSerif" value="ace/mode/csharp">C#</option>
+                  <option class="sansSerif" value="ace/mode/csound_document">Csound Document</option>
+                  <option class="sansSerif" value="ace/mode/csound_orchestra">Csound</option>
+                  <option class="sansSerif" value="ace/mode/csound_score">Csound Score</option>
+                  <option class="sansSerif" value="ace/mode/css">CSS</option>
+                  <option class="sansSerif" value="ace/mode/curly">Curly</option>
+                  <option class="sansSerif" value="ace/mode/d">D</option>
+                  <option class="sansSerif" value="ace/mode/dart">Dart</option>
+                  <option class="sansSerif" value="ace/mode/diff">Diff</option>
+                  <option class="sansSerif" value="ace/mode/django">Django</option>
+                  <option class="sansSerif" value="ace/mode/dockerfile">Dockerfile</option>
+                  <option class="sansSerif" value="ace/mode/dot">Dot</option>
+                  <option class="sansSerif" value="ace/mode/drools">Drools</option>
+                  <option class="sansSerif" value="ace/mode/edifact">Edifact</option>
+                  <option class="sansSerif" value="ace/mode/eiffel">Eiffel</option>
+                  <option class="sansSerif" value="ace/mode/ejs">EJS</option>
+                  <option class="sansSerif" value="ace/mode/elixir">Elixir</option>
+                  <option class="sansSerif" value="ace/mode/elm">Elm</option>
+                  <option class="sansSerif" value="ace/mode/erlang">Erlang</option>
+                  <option class="sansSerif" value="ace/mode/forth">Forth</option>
+                  <option class="sansSerif" value="ace/mode/fortran">Fortran</option>
+                  <option class="sansSerif" value="ace/mode/fsharp">FSharp</option>
+                  <option class="sansSerif" value="ace/mode/fsl">FSL</option>
+                  <option class="sansSerif" value="ace/mode/ftl">FreeMarker</option>
+                  <option class="sansSerif" value="ace/mode/gcode">Gcode</option>
+                  <option class="sansSerif" value="ace/mode/gherkin">Gherkin</option>
+                  <option class="sansSerif" value="ace/mode/gitignore">Gitignore</option>
+                  <option class="sansSerif" value="ace/mode/glsl">Glsl</option>
+                  <option class="sansSerif" value="ace/mode/gobstones">Gobstones</option>
+                  <option class="sansSerif" value="ace/mode/golang">Go</option>
+                  <option class="sansSerif" value="ace/mode/graphqlschema">GraphQLSchema</option>
+                  <option class="sansSerif" value="ace/mode/groovy">Groovy</option>
+                  <option class="sansSerif" value="ace/mode/haml">HAML</option>
+                  <option class="sansSerif" value="ace/mode/handlebars">Handlebars</option>
+                  <option class="sansSerif" value="ace/mode/haskell">Haskell</option>
+                  <option class="sansSerif" value="ace/mode/haskell_cabal">Haskell Cabal</option>
+                  <option class="sansSerif" value="ace/mode/haxe">haXe</option>
+                  <option class="sansSerif" value="ace/mode/hjson">Hjson</option>
+                  <option class="sansSerif" value="ace/mode/html">HTML</option>
+                  <option class="sansSerif" value="ace/mode/html_elixir">HTML (Elixir)</option>
+                  <option class="sansSerif" value="ace/mode/html_ruby">HTML (Ruby)</option>
+                  <option class="sansSerif" value="ace/mode/ini">INI</option>
+                  <option class="sansSerif" value="ace/mode/io">Io</option>
+                  <option class="sansSerif" value="ace/mode/jack">Jack</option>
+                  <option class="sansSerif" value="ace/mode/jade">Jade</option>
+                  <option class="sansSerif" value="ace/mode/java">Java</option>
+                  <option class="sansSerif" value="ace/mode/javascript">JavaScript</option>
+                  <option class="sansSerif" value="ace/mode/json">JSON</option>
+                  <option class="sansSerif" value="ace/mode/json5">JSON5</option>
+                  <option class="sansSerif" value="ace/mode/jsoniq">JSONiq</option>
+                  <option class="sansSerif" value="ace/mode/jsp">JSP</option>
+                  <option class="sansSerif" value="ace/mode/jssm">JSSM</option>
+                  <option class="sansSerif" value="ace/mode/jsx">JSX</option>
+                  <option class="sansSerif" value="ace/mode/julia">Julia</option>
+                  <option class="sansSerif" value="ace/mode/kotlin">Kotlin</option>
+                  <option class="sansSerif" value="ace/mode/latex">LaTeX</option>
+                  <option class="sansSerif" value="ace/mode/less">LESS</option>
+                  <option class="sansSerif" value="ace/mode/liquid">Liquid</option>
+                  <option class="sansSerif" value="ace/mode/lisp">Lisp</option>
+                  <option class="sansSerif" value="ace/mode/livescript">LiveScript</option>
+                  <option class="sansSerif" value="ace/mode/logiql">LogiQL</option>
+                  <option class="sansSerif" value="ace/mode/lsl">LSL</option>
+                  <option class="sansSerif" value="ace/mode/lua">Lua</option>
+                  <option class="sansSerif" value="ace/mode/luapage">LuaPage</option>
+                  <option class="sansSerif" value="ace/mode/lucene">Lucene</option>
+                  <option class="sansSerif" value="ace/mode/makefile">Makefile</option>
+                  <option class="sansSerif" value="ace/mode/markdown">Markdown</option>
+                  <option class="sansSerif" value="ace/mode/mask">Mask</option>
+                  <option class="sansSerif" value="ace/mode/matlab">MATLAB</option>
+                  <option class="sansSerif" value="ace/mode/maze">Maze</option>
+                  <option class="sansSerif" value="ace/mode/mediawiki">MediaWiki</option>
+                  <option class="sansSerif" value="ace/mode/mel">MEL</option>
+                  <option class="sansSerif" value="ace/mode/mixal">MIXAL</option>
+                  <option class="sansSerif" value="ace/mode/mushcode">MUSHCode</option>
+                  <option class="sansSerif" value="ace/mode/mysql">MySQL</option>
+                  <option class="sansSerif" value="ace/mode/nginx">Nginx</option>
+                  <option class="sansSerif" value="ace/mode/nim">Nim</option>
+                  <option class="sansSerif" value="ace/mode/nix">Nix</option>
+                  <option class="sansSerif" value="ace/mode/nsis">NSIS</option>
+                  <option class="sansSerif" value="ace/mode/nunjucks">Nunjucks</option>
+                  <option class="sansSerif" value="ace/mode/objectivec">Objective-C</option>
+                  <option class="sansSerif" value="ace/mode/ocaml">OCaml</option>
+                  <option class="sansSerif" value="ace/mode/pascal">Pascal</option>
+                  <option class="sansSerif" value="ace/mode/perl">Perl</option>
+                  <option class="sansSerif" value="ace/mode/perl6">Perl 6</option>
+                  <option class="sansSerif" value="ace/mode/pgsql">pgSQL</option>
+                  <option class="sansSerif" value="ace/mode/php">PHP</option>
+                  <option class="sansSerif" value="ace/mode/php_laravel_blade">PHP (Blade Template)</option>
+                  <option class="sansSerif" value="ace/mode/pig">Pig</option>
+                  <option class="sansSerif" value="ace/mode/powershell">Powershell</option>
+                  <option class="sansSerif" value="ace/mode/praat">Praat</option>
+                  <option class="sansSerif" value="ace/mode/prisma">Prisma</option>
+                  <option class="sansSerif" value="ace/mode/prolog">Prolog</option>
+                  <option class="sansSerif" value="ace/mode/properties">Properties</option>
+                  <option class="sansSerif" value="ace/mode/protobuf">Protobuf</option>
+                  <option class="sansSerif" value="ace/mode/puppet">Puppet</option>
+                  <option class="sansSerif" value="ace/mode/python">Python</option>
+                  <option class="sansSerif" value="ace/mode/qml">QML</option>
+                  <option class="sansSerif" value="ace/mode/r">R</option>
+                  <option class="sansSerif" value="ace/mode/razor">Razor</option>
+                  <option class="sansSerif" value="ace/mode/rdoc">RDoc</option>
+                  <option class="sansSerif" value="ace/mode/red">Red</option>
+                  <option class="sansSerif" value="ace/mode/rhtml">RHTML</option>
+                  <option class="sansSerif" value="ace/mode/rst">RST</option>
+                  <option class="sansSerif" value="ace/mode/ruby">Ruby</option>
+                  <option class="sansSerif" value="ace/mode/rust">Rust</option>
+                  <option class="sansSerif" value="ace/mode/sass">SASS</option>
+                  <option class="sansSerif" value="ace/mode/scad">SCAD</option>
+                  <option class="sansSerif" value="ace/mode/scala">Scala</option>
+                  <option class="sansSerif" value="ace/mode/scheme">Scheme</option>
+                  <option class="sansSerif" value="ace/mode/scss">SCSS</option>
+                  <option class="sansSerif" value="ace/mode/sh">SH</option>
+                  <option class="sansSerif" value="ace/mode/sjs">SJS</option>
+                  <option class="sansSerif" value="ace/mode/slim">Slim</option>
+                  <option class="sansSerif" value="ace/mode/smarty">Smarty</option>
+                  <option class="sansSerif" value="ace/mode/snippets">snippets</option>
+                  <option class="sansSerif" value="ace/mode/soy_template">Soy Template</option>
+                  <option class="sansSerif" value="ace/mode/space">Space</option>
+                  <option class="sansSerif" value="ace/mode/sql">SQL</option>
+                  <option class="sansSerif" value="ace/mode/sqlserver">SQLServer</option>
+                  <option class="sansSerif" value="ace/mode/stylus">Stylus</option>
+                  <option class="sansSerif" value="ace/mode/svg">SVG</option>
+                  <option class="sansSerif" value="ace/mode/swift">Swift</option>
+                  <option class="sansSerif" value="ace/mode/tcl">Tcl</option>
+                  <option class="sansSerif" value="ace/mode/terraform">Terraform</option>
+                  <option class="sansSerif" value="ace/mode/tex">Tex</option>
+                  <option class="sansSerif" value="ace/mode/text">Text</option>
+                  <option class="sansSerif" value="ace/mode/textile">Textile</option>
+                  <option class="sansSerif" value="ace/mode/toml">Toml</option>
+                  <option class="sansSerif" value="ace/mode/tsx">TSX</option>
+                  <option class="sansSerif" value="ace/mode/twig">Twig</option>
+                  <option class="sansSerif" value="ace/mode/typescript">Typescript</option>
+                  <option class="sansSerif" value="ace/mode/vala">Vala</option>
+                  <option class="sansSerif" value="ace/mode/vbscript">VBScript</option>
+                  <option class="sansSerif" value="ace/mode/velocity">Velocity</option>
+                  <option class="sansSerif" value="ace/mode/verilog">Verilog</option>
+                  <option class="sansSerif" value="ace/mode/vhdl">VHDL</option>
+                  <option class="sansSerif" value="ace/mode/visualforce">Visualforce</option>
+                  <option class="sansSerif" value="ace/mode/wollok">Wollok</option>
+                  <option class="sansSerif" value="ace/mode/xml">XML</option>
+                  <option class="sansSerif" value="ace/mode/xquery">XQuery</option>
+                  <option class="sansSerif" value="ace/mode/yaml">YAML</option>
+                  <option class="sansSerif" value="ace/mode/zeek">Zeek</option>
+                </optgroup>
+              </select>
+            </td>
+          </tr>
+          
+          <tr>
+            <td><div class="sansSerif settingLabel">Theme</div></td>
+            <td>
+              <select id="themeSelector" class="settingDropdown">
+                <optgroup class="sansSerif" label="Bright">
+                  <option class="sansSerif" value="ace/theme/chrome">Chrome</option>
+                  <option class="sansSerif" value="ace/theme/clouds">Clouds</option>
+                  <option class="sansSerif" value="ace/theme/crimson_editor">Crimson Editor</option>
+                  <option class="sansSerif" value="ace/theme/dawn">Dawn</option>
+                  <option class="sansSerif" value="ace/theme/dreamweaver">Dreamweaver</option>
+                  <option class="sansSerif" value="ace/theme/eclipse">Eclipse</option>
+                  <option class="sansSerif" value="ace/theme/github">GitHub</option>
+                  <option class="sansSerif" value="ace/theme/iplastic">IPlastic</option>
+                  <option class="sansSerif" value="ace/theme/solarized_light">Solarized Light</option>
+                  <option class="sansSerif" value="ace/theme/textmate">TextMate</option>
+                  <option class="sansSerif" value="ace/theme/tomorrow">Tomorrow</option>
+                  <option class="sansSerif" value="ace/theme/xcode">XCode</option>
+                  <option class="sansSerif" value="ace/theme/kuroir">Kuroir</option>
+                  <option class="sansSerif" value="ace/theme/katzenmilch">KatzenMilch</option>
+                  <option class="sansSerif" value="ace/theme/sqlserver">SQL Server</option>
+                </optgroup>
+                
+                <optgroup class="sansSerif" label="Dark">
+                  <option class="sansSerif" value="ace/theme/ambiance">Ambiance</option>
+                  <option class="sansSerif" value="ace/theme/chaos">Chaos</option>
+                  <option class="sansSerif" value="ace/theme/clouds_midnight">Clouds Midnight</option>
+                  <option class="sansSerif" value="ace/theme/dracula">Dracula</option>
+                  <option class="sansSerif" value="ace/theme/cobalt">Cobalt</option>
+                  <option class="sansSerif" value="ace/theme/gruvbox">Gruvbox</option>
+                  <option class="sansSerif" value="ace/theme/gob">Green on Black</option>
+                  <option class="sansSerif" value="ace/theme/idle_fingers">idle Fingers</option>
+                  <option class="sansSerif" value="ace/theme/kr_theme">krTheme</option>
+                  <option class="sansSerif" value="ace/theme/merbivore">Merbivore</option>
+                  <option class="sansSerif" value="ace/theme/merbivore_soft">Merbivore Soft</option>
+                  <option class="sansSerif" value="ace/theme/mono_industrial">Mono Industrial</option>
+                  <option class="sansSerif" value="ace/theme/monokai">Monokai</option>
+                  <option class="sansSerif" value="ace/theme/nord_dark">Nord Dark</option>
+                  <option class="sansSerif" value="ace/theme/one_dark">One Dark</option>
+                  <option class="sansSerif" value="ace/theme/pastel_on_dark">Pastel on dark</option>
+                  <option class="sansSerif" value="ace/theme/solarized_dark">Solarized Dark</option>
+                  <option class="sansSerif" value="ace/theme/terminal">Terminal</option>
+                  <option class="sansSerif" value="ace/theme/tomorrow_night">Tomorrow Night</option>
+                  <option class="sansSerif" value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+                  <option class="sansSerif" value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
+                  <option class="sansSerif" value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+                  <option class="sansSerif" value="ace/theme/twilight">Twilight</option>
+                  <option class="sansSerif" value="ace/theme/vibrant_ink">Vibrant Ink</option>
+                </optgroup>  
+              </select>
+            </td>
+          </tr>          
+          
+          <tr>
+            <td><div class="sansSerif settingLabel">Font Size</div></td>
+            <td>
+              <div style="display:flex; flex-direction:row;">
+                <select id="fontSizeSelector" class="settingDropdown">
+                  <optgroup class="sansSerif" label="Font Size">
+                    <option class="sansSerif" value="10px">10</option>
+                    <option class="sansSerif" value="11px">11</option>
+                    <option class="sansSerif" value="12px">12</option>
+                    <option class="sansSerif" value="24px">24</option>
+                    <option class="sansSerif" value="custom">Custom</option>
+                  </optgroup>
+                </select>
+                <div style="height:100%; width:5px;"></div>
+                <input id="customFontSize" style="width:30px;"></input>
+                <div style="height:100%; width:5px;"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
     
-      <!-- Required Ace Libraries -->
     <script src="ace/ace.js"></script>
-    <script src="ace/mode-javascript.js"></script>
-    
-    <script>
-      const filename   = document.getElementById("filename");
-      const editorMode = document.getElementById("editorMode");
-      const openFile   = document.getElementById("openFile");
-      const saveFile   = document.getElementById("saveFile");
+
+    <script id="vars">
+      const filename         = document.getElementById("filename");
+      const editorElement    = document.getElementById("aceEditorTarget");
+      const settingsButton   = document.getElementById("settingsButton");
+      const settingsMenu     = document.getElementById("settingsMenu");
+      const settingsSpacer   = document.getElementById("settingsSpacer");
+      const openFile         = document.getElementById("openFile");
+      const saveFile         = document.getElementById("saveFile");
+      const themeSelector    = document.getElementById("themeSelector");
+      const langSelector     = document.getElementById("langSelector");
+      const keybindSelector  = document.getElementById("keybindSelector");
+      const fontSizeSelector = document.getElementById("fontSizeSelector");
+      const customFontSize   = document.getElementById("customFontSize");
       
       const editor = ace.edit("aceEditorTarget");
       
-      const validExtensions = [".txt", ".js", ".html"];
+      const validExtensions = [".c",".h",".m",".md",".cc",".cs",".pl",".pm",".rb",".scss",".csv",".txt",".rtf",".htm",".html",".mhtml",".mxml",".ts",".tsx",".js",".css",".scss",".xml",".xsl",".json",".java",".py",".log",".tex",".cls",".java",".cpp",".hpp",".php",".bak",".yaml",".rels",".bsh",".csh",".cyc",".cv",".perl",".ipynb",".bat",".stp",".ini",".inf",".mbox",".msg",".lic",".eml",".text",".latex",".conf",".smi",".sub",".srt",".asc",".lst",".bas",".asp",".aspx",".eg",".manifest",".ascii",".yml",".eng",".xsl",".enc",".ps1",".ino",".url",".vcf",".aux",".toc",".coffee",".rbw",".sass",".scad",".clj",".scala",".textile",".cu",".bib",".rtx",".sql",".pas",".as",".r",".nc",".cnc",".ncc",".tap",".lua",".pb",".pbi",".properties",".cfg",".config",".nxc",".go",".tcl",".cmd",".groovy",".abc",".ahk",".ml",".lisp",".el",".vbs",".f90",".asm",".s",".vb",".vhdl",".xsd",".shtml",".shell",".haml",".rdoc",".ccpp",".less",".jsp",".crd",".kml",".kmz",".svg",".sqf",".sqs",".sqm",".ext",".yml",".bas",".awk",".st",".aiml",".vhd",".j",".ly",".bs2",".tsv",".aspx",".v",".sv",".sdf",".sln",".smi",".mol",".ps1",".pks",".pkb",".vw",".tab",".trg",".seq",".prc",".pls",".plb",".lng",".lst",".m51",".a51",".fs",".patch",".qml",".qrc",".pro",".pri",".afl",".data",".info",".org",".env",".csd",".orc",".sco"];
       
       const download = (filename, text) => {
         const downloader = document.createElement('a');
@@ -114,11 +433,28 @@
         document.body.appendChild(getter); getter.click();  document.body.removeChild(getter);
       }
       
+      const logToEditor = (message) => {
+        editor.setValue(editor.getValue()+message+"\n");
+        editor.gotoLine(editor.session.getLength());
+      }
     </script>
       
-    <script>
+    <script id="setup">
       editor.setTheme("ace/theme/monokai");
-      editor.session.setMode("ace/mode/javascript");
+      
+      editorElement.addEventListener("input", () => {
+      console.log("aaaa");
+            editor.execCommand("startAutocomplete", { matches: "h"});
+
+      });
+
+      
+      settingsButton.addEventListener("click", () => {
+          const displayMode1 = settingsMenu.style.display;
+          const displayMode2 = settingsSpacer.style.display;
+          settingsMenu.style.display = (displayMode1!="block")?"block":"none";
+          settingsSpacer.style.display = (displayMode2!="block")?"block":"none";
+      });
       
       saveFile.addEventListener("click", () => {
         if (!filename.innerText.includes(".")) {console.log("invalid filename"); return;}
@@ -137,6 +473,11 @@
           editor.gotoLine(1);
         });
       });
+      
+      themeSelector.addEventListener("change", () => editor.setTheme(themeSelector.value));
+      langSelector.addEventListener("change", () => editor.session.setMode(langSelector.value));
+      keybindSelector.addEventListener("change", () => editor.setKeyboardHandler(keybindSelector.value));
+      fontSizeSelector.addEventListener("change", () => document.getElementById("aceEditorTarget").style.fontSize=(fontSizeSelector.value=="custom")?customFontSize.innerText+"px":fontSizeSelector.value);
     </script>
   </body>
 </html>  
